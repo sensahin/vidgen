@@ -2,6 +2,7 @@ import generation_utils
 import re
 import os
 from moviepy.editor import *
+from moviepy.video.tools.subtitles import SubtitlesClip, TextClip
 
 def make_movie(title, music_title):
     folder_name = generation_utils.title_to_filename(title) 
@@ -55,6 +56,13 @@ def make_movie(title, music_title):
         clip.duration = duration
         clips.append(clip)
 
+    # add subtitles
+    for i in range(len(sentences)):
+        duration = generation_utils.number_of_words(sentences[i]) / wpm * 60
+        clip = TextClip(sentences[i], fontsize=30, color='white', font='Arial-Bold', method='caption', size=(1080, 720)).set_start(clips[i].start).set_duration(duration).set_position(('center', 'bottom')).crossfadein(0.1).crossfadeout(0.1)
+        clips[i] = CompositeVideoClip([clips[i], clip])
+
+
     if len(clips) > 1:
         video = CompositeVideoClip(clips, use_bgclip = True)
     else:
@@ -63,4 +71,5 @@ def make_movie(title, music_title):
     audio_file.duration = max(current_time, voice_length)
     video.audio = audio_file
     video.duration = max(current_time, voice_length)
+
     video.write_videofile(os.path.join("projects",folder_name, folder_name + ".mp4"), fps=24, audio=True, audio_codec='aac', preset='ultrafast',logger='bar', threads = 6)

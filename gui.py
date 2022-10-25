@@ -54,7 +54,10 @@ layout = [
             [sg.Text("Google Voice Speaking Rate (x)"), sg.Slider(range=(0.25, 4.0), default_value=1.1, resolution=.05, orientation='horizontal', key='speakingRate')],
             [sg.Text("Google Voice Pitch (cents)"), sg.Slider(range=(-20.0, 20.0), default_value=0, resolution=.1, orientation='horizontal', key='pitch')],
             [sg.Button('Quit')],
-            [sg.Column([[logo_image]], justification="center")]
+            [sg.Column([[logo_image]], justification="center")],
+            # add a tickbox to enable/disable subtitles
+            [sg.Text("Subtitles"), sg.Checkbox("Enable", default=False, key="subtitles")]
+
         ]
 
 def GenerateGoogleTTS(title, response_text, voice, speaking_rate, pitch):
